@@ -22,7 +22,7 @@ require("./models/task");
 
 app.use(express.json());
 
-app.use("/auth", require("./router"));
+app.use("/", require("./router"));
 
 app.get("/", (req, res) => {
   res.send("Hello World");

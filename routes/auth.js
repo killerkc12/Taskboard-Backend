@@ -1,10 +1,7 @@
-const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
-// const requireLogin = require("../middleware/requireLogin");
 
 const SignUp = async (req, res) => {
   const { name, email, password, photo } = req.body;
@@ -13,7 +10,7 @@ const SignUp = async (req, res) => {
   }
 
   try {
-    const alreadUser = await FindUser(email);
+    const alreadUser = await FindUserByEmail(email);
     if (alreadUser) {
       return res
         .status(422)
@@ -45,7 +42,7 @@ const SignIn = async (req, res) => {
   }
 
   try {
-    const savedUser = await FindUser(email);
+    const savedUser = await FindUserByEmail(email);
     if (!savedUser) {
       return res.status(422).json({ error: "Email or Password in invalid." });
     }
@@ -57,8 +54,13 @@ const SignIn = async (req, res) => {
   }
 };
 
-const FindUser = async (email) => {
-  const savedUser = await User.findOne({ email: email });
+const FindUserByEmail = async (email) => {
+  const savedUser = await User.findOne({ email });
+  return savedUser;
+};
+
+const FindUserById = async (_id) => {
+  const savedUser = await User.findOne({ _id });
   return savedUser;
 };
 
@@ -67,7 +69,15 @@ const CreateToken = (_id) => {
 };
 
 const GetUserData = (token, savedUser) => {
-  return { token, user: { ...savedUser._doc } };
+  return {
+    token,
+    user: {
+      _id: savedUser._id,
+      name: savedUser.name,
+      emaiL: savedUser.email,
+      photo: savedUser.photo,
+    },
+  };
 };
 
-module.exports = { SignIn, SignUp };
+module.exports = { SignIn, SignUp, FindUserById };
