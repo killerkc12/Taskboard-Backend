@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
+const { JWT_SECRET } = process.env;
 
 const SignUp = async (req, res) => {
   const { name, email, password, photo } = req.body;

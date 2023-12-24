@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
+const { JWT_SECRET } = process.env;
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const { FindUserById } = require('../routes/auth');
